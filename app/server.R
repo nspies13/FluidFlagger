@@ -1,5 +1,4 @@
 # server.R
-
 suppressPackageStartupMessages(library(shiny))
 suppressPackageStartupMessages(library(fastshap))
 suppressPackageStartupMessages(library(shapviz))
@@ -7,15 +6,19 @@ suppressPackageStartupMessages(library(ggplot2))
 suppressPackageStartupMessages(library(xgboost))
 suppressPackageStartupMessages(library(tidymodels))
 
+helpers <- list.files("helpers", full.names = T)
+map(helpers, ~ source(.x))
+
 # Load the trained models
-loaded_model <-
-  readRDS("models/BJH_Comments_grid_BMP_Base_XGB_current_with_deltas.rds")$model |> bundle::unbundle()
+loaded_model <-readRDS("models/BJH_Comments_grid_BMP_Base_XGB_current_with_deltas.rds")$model |> bundle::unbundle()
 apd_pca <- readRDS("models/apd_pca.rds")
 train <- read.csv("data/train.csv")
+
 pred_function <-
   function(object, newdata) {
     as.numeric(as.character(predict(object, new_data = newdata)$.pred_class))
   }
+
 rec <- extract_recipe(loaded_model)
 set.seed(12345)
 
@@ -90,7 +93,7 @@ server <- function(input, output, session) {
         sv_waterfall(
           shapviz(shap, input_data),
           row_id = 1,
-          size = 0,
+          size = 1,
           max_display = 10,
           show_annotation = F,
           format_shap = function(z)
@@ -118,13 +121,12 @@ server <- function(input, output, session) {
     
     # Display the results
     output$finalPrediction <- renderUI({
-      HTML(
-        paste(
-          "<div style='width:100%; height:100%; display: flex; align-items: center; justify-content: left; font-size:48px; font-weight:bold; color:darkgrey;'>Final Prediction:&nbsp&nbsp <span style='font-weight:normal; color:black; font-style:italic; font-weight:bold;'>",
-          pred,
-          "</span></div>"
-        )
-      )
+      if (pred == "Contaminated") {
+        style <- "color:darkred;"
+      } else {
+        style <- "color:black;"
+      }
+      HTML(paste("<div style='width:100%; height:100%; display: flex; align-items: center; justify-content: left; font-size:48px; font-weight:bold; ", style, "'>Final Prediction:&nbsp&nbsp <span style='font-weight:normal; font-style:italic; font-weight:bold;'>", pred, "</span></div>"))
     })
     
     output$predictedProbability <- renderUI({
@@ -138,13 +140,12 @@ server <- function(input, output, session) {
     })
     
     output$predictionApplicability <- renderUI({
-      HTML(
-        paste(
-          "<div style='width:100%; height:100%; display: flex; align-items: center; justify-content: left; font-size:24px; font-weight:bold; color:darkgrey;'>Applicability:&nbsp&nbsp <span style='font-weight:normal; color:black; font-style:italic;'>",
-          ood_label,
-          "</span></div>"
-        )
-      )
+      if (ood_label == "Out-of-Distribution") {
+        style <- "color:darkred;"
+      } else {
+        style <- "color:black;"
+      }
+      HTML(paste("<div style='width:100%; height:100%; display: flex; align-items: center; justify-content: left; font-size:24px; font-weight:bold; ", style, "'>Applicability:&nbsp&nbsp <span style='font-weight:normal; font-style:italic;'>", ood_label, "</span></div>"))
     })
     
     output$shapPlot <- renderPlot({

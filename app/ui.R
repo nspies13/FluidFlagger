@@ -4,13 +4,15 @@ suppressPackageStartupMessages(library(shiny))
 ui <- fluidPage(
   
   titlePanel(HTML(
-    paste(
-      "<div style='width:100%; height:100%; display: flex; align-items: center; justify-content: left; font-size:64px; font-weight:bold; font-style:italic; color:black;
-                        '>FluidFlagger.ai </div>"
-    )
+    paste0(
+      "<div style='width:100%; height:100%; display: flex; flex-direction: column; align-items: flex-start; justify-content: center;'>",
+      "<div style='font-size:64px; font-weight:bold; font-style:italic; color:black; margin-bottom: 16px; '>FluidFlagger.ai</div>", 
+      "<div style='font-size:24px; font-style:italic; color:gray;'>An AI-driven application for detection of IV fluid contamination.</div>",
+      "<div style='font-size:24px; font-style:italic; color:gray; margin-bottom: 24px;'>Contact <a href='mailto:nspies13@gmail.com'>Nick Spies, MD</a> for bug reports or feature suggestions.</div>",
+      "</div>"
+    ),
+    windowTitle = "FluidFlagger.ai")
   ),
-  windowTitle = "FluidFlagger.ai"),
-  
   sidebarLayout(
     sidebarPanel(
       fluidRow(
@@ -20,14 +22,14 @@ ui <- fluidPage(
           numericInput(
             "sodium",
             "Sodium (mmol/L):",
-            145,
+            147,
             min = 120,
             max = 180
           ),
           numericInput(
             "chloride",
             "Chloride (mmol/L):",
-            116,
+            121,
             min = 50,
             max = 140
           ),
@@ -51,7 +53,7 @@ ui <- fluidPage(
           numericInput(
             "glucose",
             "Glucose (mg/dL):",
-            80,
+            690,
             min = 10,
             max = 5000
           )
@@ -59,14 +61,14 @@ ui <- fluidPage(
         column(
           6,
           h3("Change from Prior"),
-          numericInput("sodium_delta_prior", "Δ Sodium:", 1),
+          numericInput("sodium_delta_prior", "Δ Sodium:", 8),
           numericInput("chloride_delta_prior", "Δ Chloride:", 18),
           numericInput("potassium_plas_delta_prior", "Δ Potassium:",-1.5),
           numericInput("co2_totl_delta_prior", "Δ CO2_totl:",-6),
           numericInput("bun_delta_prior", "Δ BUN:", 0),
           numericInput("creatinine_delta_prior", "Δ Creatinine:", 0),
           numericInput("calcium_delta_prior", "Δ Calcium:",-2.2),
-          numericInput("glucose_delta_prior", "Δ Glucose:",-8)
+          numericInput("glucose_delta_prior", "Δ Glucose:",543)
         )
       ),
       actionButton("predict", "Predict"),
