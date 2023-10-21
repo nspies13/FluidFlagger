@@ -5,7 +5,7 @@ account: nickspies
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 10159289
-bundleId: 7830954
+bundleId: 7830988
 url: https://nickspies.shinyapps.io/FluidFlagger/
 version: 1
 asMultiple: FALSE

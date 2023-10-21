@@ -126,7 +126,7 @@ server <- function(input, output, session) {
       } else {
         style <- "color:black;"
       }
-      HTML(paste("<div style='width:100%; height:100%; display: flex; align-items: center; justify-content: left; font-size:48px; font-weight:bold; ", style, "'>Final Prediction:&nbsp&nbsp <span style='font-weight:normal; font-style:italic; font-weight:bold;'>", pred, "</span></div>"))
+      HTML(paste("<div style='width:100%; height:100%; display: flex; align-items: center; justify-content: left; font-size:42px; font-weight:bold; ", style, "'>Prediction:&nbsp&nbsp <span style='font-weight:normal; font-style:italic; font-weight:bold;'>", pred, "</span></div>"))
     })
     
     output$predictedProbability <- renderUI({
